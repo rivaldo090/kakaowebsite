@@ -7,21 +7,23 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Menambahkan kolom 'role' ke tabel users.
+     * Run the migrations.
      */
     public function up(): void
     {
-        Schema::table('user', function (Blueprint $table) {
-            $table->string('role')->default('user')->after('password'); // atau sesuaikan posisi kolom jika perlu
+        Schema::table('users', function (Blueprint $table) {
+            // Menambahkan kolom 'role' setelah 'password' (karena kolom 'password' sudah ada)
+            $table->string('role')->default('user')->after('password');
         });
     }
 
     /**
-     * Menghapus kolom 'role' saat rollback.
+     * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('user', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
+            // Menghapus kolom 'role' jika di-rollback
             $table->dropColumn('role');
         });
     }

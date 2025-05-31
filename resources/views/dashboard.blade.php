@@ -8,17 +8,20 @@
     <!-- Card Kelembapan Tanah -->
     <div class="bg-white p-8 rounded-lg shadow-lg text-center hover:scale-105 transition duration-300">
         <h3 class="text-2xl font-bold mb-4 text-green-600">Kelembapan Tanah</h3>
-        <p id="soil-humidity" class="text-3xl font-semibold text-gray-700">-</p>
+        <p id="soil-humidity" class="text-3xl font-semibold text-gray-700">
+    {{ $kelembapan ?? 'Belum ada data' }}</p>
+
     </div>
     <!-- Card Suhu -->
     <div class="bg-white p-8 rounded-lg shadow-lg text-center hover:scale-105 transition duration-300">
         <h3 class="text-2xl font-bold mb-4 text-green-600">Suhu</h3>
-        <p id="temperature" class="text-3xl font-semibold text-gray-700">-</p>
+       <p id="temperature" class="text-3xl font-semibold text-gray-700">
+    {{ $suhu !== null ? $suhu . ' °C' : '°C' }}</p>
     </div>
     <!-- Card Cahaya -->
     <div class="bg-white p-8 rounded-lg shadow-lg text-center hover:scale-105 transition duration-300">
         <h3 class="text-2xl font-bold mb-4 text-green-600">Cahaya</h3>
-        <p id="light-intensity" class="text-3xl font-semibold text-gray-700">-</p>
+        <p id="light-intensity" class="text-3xl font-semibold text-gray-700">aktif</p>
     </div>
 </div>
 
