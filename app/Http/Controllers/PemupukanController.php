@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pupuk;
-use App\Models\History; // <- Tambahkan ini
+use App\Models\History;
 
 class PemupukanController extends Controller
 {
     public function index()
     {
-        return view('pemupukan');
+        return view('pemupukans');
     }
 
     public function store(Request $request)
@@ -35,10 +35,10 @@ class PemupukanController extends Controller
                 'tanggal' => $date,
                 'jenis' => 'pemupukan',
                 'jam_mulai' => now()->format('H:i'),
-                'jam_selesai' => now()->addMinutes(10)->format('H:i'), // Contoh durasi
+                'jam_selesai' => now()->addMinutes(10)->format('H:i'), // contoh: 10 menit
             ]);
         }
 
-        return redirect()->route('history')->with('success', 'Data pemupukan berhasil disimpan.');
+        return redirect()->back()->with('success', 'Pengaturan pemupukan berhasil disimpan.');
     }
 }

@@ -4,42 +4,54 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
-    protected $primaryKey = 'user_id';
-    protected $table = 'user';
+    protected $table = 'users';
+    protected $primaryKey = 'id';
     public $timestamps = true;
 
+    /**
+     * Kolom yang bisa diisi secara massal.
+     */
     protected $fillable = [
         'username',
-        'pass',
         'email',
+        'password', // Harus disimpan dalam bentuk bcrypt
         'role',
     ];
 
+    /**
+     * Kolom yang disembunyikan saat di-serialize (misalnya ke JSON).
+     */
     protected $hidden = [
-        'pass',
+        'password',
+        'remember_token',
     ];
 
-    public function getAuthPassword()
-    {
-        return $this->pass;
-    }
-
+    /**
+     * Kolom bertipe tanggal.
+     */
     protected $dates = [
         'created_at',
         'updated_at',
     ];
 
-    // ✅ Tambahkan ini
+    /**
+     * Cek apakah user memiliki role tertentu.
+     */
     public function hasRole($role)
     {
         return $this->role === $role;
     }
 
+    /**
+     * Cek apakah user adalah admin.
+     */
     public function isAdmin()
     {
         return $this->role === 'admin';

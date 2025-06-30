@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Pupuk extends Model
 {
     // Nama tabel (opsional jika nama tabel mengikuti konvensi "pupuks")
-    protected $table = 'pupuks';
+    protected $table = 'pemupukans';
 
     // Field yang boleh diisi (mass assignable)
    protected $fillable = ['jenis_pupuk', 'jumlah', 'tanggal'];
