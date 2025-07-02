@@ -1,15 +1,15 @@
-# Gunakan image resmi PHP
+# Base image with PHP and FPM
 FROM php:8.2-fpm
 
-# Install system dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     git \
     curl \
+    zip \
+    unzip \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
-    zip \
-    unzip \
     libzip-dev \
     libpq-dev \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
@@ -20,24 +20,18 @@ COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Salin semua file ke container
+# Copy source code
 COPY . .
 
-# Install dependensi Laravel
+# Install dependencies
 RUN composer install --optimize-autoloader --no-dev
 
-# Ganti permission folder penting Laravel
-RUN chown -R www-data:www-data \
-    /var/www/storage \
-    /var/www/bootstrap/cache
+# Set permissions
+RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Jalankan perintah Laravel yang penting
-RUN php artisan config:cache && \
+# Run artisan setup commands during container start
+CMD php artisan migrate --force && \
+    php artisan config:cache && \
     php artisan route:cache && \
-    php artisan view:cache
-
-# Expose port 9000 (FPM default)
-EXPOSE 9000
-
-# Jalankan PHP-FPM
-CMD ["php-fpm"]
+    php artisan view:cache && \
+    php-fpm
