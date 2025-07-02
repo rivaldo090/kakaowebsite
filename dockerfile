@@ -30,11 +30,17 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 
 # Jalankan migrate & cache saat start, tunggu DB siap
 CMD bash -c '\
-    until php artisan migrate:status > /dev/null 2>&1; do \
-        echo "⏳ Waiting for database..."; \
+    for i in {1..15}; do \
+        echo "🔍 Checking DB connection... ($i)"; \
+        php artisan migrate:status && break; \
+        echo "⏳ Waiting for DB..."; \
         sleep 2; \
-    done && \
-    echo "✅ Database is ready. Running migration..." && \
+    done; \
+    if ! php artisan migrate:status; then \
+        echo "❌ Database not reachable, aborting!"; \
+        exit 1; \
+    fi && \
+    echo "✅ Running migration..." && \
     php artisan migrate --force && \
     php artisan config:cache && \
     php artisan route:cache && \
