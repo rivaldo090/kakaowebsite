@@ -28,9 +28,15 @@ RUN composer install --optimize-autoloader --no-dev
 # Set permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Jalankan migrate & serve Laravel saat container start
-CMD php artisan migrate --force && \
+# Jalankan migrate & cache saat start, tunggu DB siap
+CMD bash -c '\
+    until php artisan migrate:status > /dev/null 2>&1; do \
+        echo "⏳ Waiting for database..."; \
+        sleep 2; \
+    done && \
+    echo "✅ Database is ready. Running migration..." && \
+    php artisan migrate --force && \
     php artisan config:cache && \
     php artisan route:cache && \
     php artisan view:cache && \
-    php-fpm
+    php-fpm'
