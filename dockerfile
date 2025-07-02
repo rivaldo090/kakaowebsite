@@ -31,7 +31,7 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 # Jalankan Laravel
 CMD bash -c '\
     echo "== ENV =="; env; \
-    PORT=${PORT:-8080}; \
+    PORT=${PORT:-9000}; \
     until php artisan migrate:status > /dev/null 2>&1; do \
         echo "⏳ Waiting for database..."; \
         sleep 2; \
@@ -42,4 +42,3 @@ CMD bash -c '\
     php artisan route:cache && \
     php artisan view:cache && \
     php artisan serve --host=0.0.0.0 --port=$PORT'
-
