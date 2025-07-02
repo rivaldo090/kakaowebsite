@@ -19,30 +19,24 @@ COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy source code
+# Copy project files
 COPY . .
 
 # Install Laravel dependencies
 RUN composer install --optimize-autoloader --no-dev
 
-# Set permissions
+# Set folder permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Jalankan migrate & cache saat start, tunggu DB siap
+# Jalankan Laravel migrate & serve (pakai php artisan serve, bukan php-fpm)
 CMD bash -c '\
-    for i in {1..15}; do \
-        echo "🔍 Checking DB connection... ($i)"; \
-        php artisan migrate:status && break; \
-        echo "⏳ Waiting for DB..."; \
+    until php artisan migrate:status > /dev/null 2>&1; do \
+        echo "⏳ Waiting for database..."; \
         sleep 2; \
-    done; \
-    if ! php artisan migrate:status; then \
-        echo "❌ Database not reachable, aborting!"; \
-        exit 1; \
-    fi && \
-    echo "✅ Running migration..." && \
+    done && \
+    echo "✅ Database ready. Running migration..." && \
     php artisan migrate --force && \
     php artisan config:cache && \
     php artisan route:cache && \
     php artisan view:cache && \
-    php-fpm'
+    php artisan serve --host=0.0.0.0 --port=8080'
