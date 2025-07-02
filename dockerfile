@@ -1,4 +1,3 @@
-# Base image with PHP and FPM
 FROM php:8.2-fpm
 
 # Install dependencies
@@ -23,13 +22,13 @@ WORKDIR /var/www
 # Copy source code
 COPY . .
 
-# Install dependencies
+# Install Laravel dependencies
 RUN composer install --optimize-autoloader --no-dev
 
 # Set permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Run artisan setup commands during container start
+# Jalankan migrate & serve Laravel saat container start
 CMD php artisan migrate --force && \
     php artisan config:cache && \
     php artisan route:cache && \
