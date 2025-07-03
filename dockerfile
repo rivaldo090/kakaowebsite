@@ -41,6 +41,7 @@ CMD ["sh", "-c", "\
   done && \
   echo '✅ MySQL terkoneksi, lanjut migrasi...' && \
   php artisan migrate --force || { echo '❌ Migrasi gagal!'; php artisan migrate:status; exit 1; } && \
+  php artisan migrate:status && \
   php artisan config:clear && \
   php artisan cache:clear && \
   php artisan config:cache && \
@@ -50,3 +51,4 @@ CMD ["sh", "-c", "\
   echo '🚀 Menjalankan Laravel server...' && \
   php artisan serve --host=0.0.0.0 --port=8080 \
 "]
+
