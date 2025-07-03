@@ -1,44 +1,52 @@
-FROM php:8.2-cli
+FROM laravelsail/php83-composer:latest
 
-# Install dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
-    curl \
-    zip \
     unzip \
+    zip \
+    curl \
+    nodejs \
+    npm \
+    netcat-openbsd \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
-    libzip-dev \
-    libpq-dev \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
-
-# Install Composer
-COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
+    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /var/www
 
-# Copy project files
+# Copy entire project
 COPY . .
 
-# Install Laravel dependencies
-RUN composer install --optimize-autoloader --no-dev
+# Install PHP and JS dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction \
+    && npm install \
+    && npm run build \
+    && npm install -g vite
 
-# Set folder permissions
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Set proper permissions
+RUN chmod -R 775 storage bootstrap/cache
 
-# Jalankan Laravel
-CMD bash -c '\
-    echo "== ENV =="; env; \
-    PORT=${PORT:-9000}; \
-    until php artisan migrate:status > /dev/null 2>&1; do \
-        echo "⏳ Waiting for database..."; \
-        sleep 2; \
-    done && \
-    echo "✅ Database ready. Running migration..." && \
-    php artisan migrate --force && \
-    php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
-    php artisan serve --host=0.0.0.0 --port=$PORT'
+# Expose Laravel port (PORT 9000 sesuai Railway)
+EXPOSE 9000
+
+# Laravel + MySQL wait + migrate + run
+CMD ["sh", "-c", "\
+  echo '🔄 Menunggu koneksi ke MySQL di $DB_HOST:$DB_PORT...' && \
+  while ! nc -z \"$DB_HOST\" \"$DB_PORT\"; do \
+    echo '⏳ MySQL belum siap, menunggu...' && sleep 5; \
+  done && \
+  echo '✅ MySQL terkoneksi, lanjut migrasi...' && \
+  php artisan migrate --force || { echo '❌ Migrasi gagal!'; exit 1; } && \
+  php artisan config:clear && \
+  php artisan cache:clear && \
+  php artisan config:cache && \
+  php artisan route:cache && \
+  php artisan view:cache && \
+  php artisan storage:link && \
+  echo '🚀 Menjalankan Laravel server...' && \
+  php artisan serve --host=0.0.0.0 --port=9000 \
+"]
