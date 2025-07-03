@@ -48,5 +48,6 @@ CMD ["sh", "-c", "\
   php artisan view:cache && \
   php artisan storage:link && \
   echo '🚀 Menjalankan Laravel server...' && \
-  php artisan serve --host=0.0.0.0 --port=9000 \
+  php artisan serve --host=0.0.0.0 --port=${PORT:-9000} \
 "]
+
