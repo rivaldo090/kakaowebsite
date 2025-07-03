@@ -30,8 +30,8 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction \
 # Set proper permissions
 RUN chmod -R 775 storage bootstrap/cache
 
-# Expose Laravel port (PORT 9000 sesuai Railway)
-EXPOSE 9000
+# Expose Laravel port
+EXPOSE 8080
 
 # Laravel + MySQL wait + migrate + run
 CMD ["sh", "-c", "\
@@ -48,6 +48,5 @@ CMD ["sh", "-c", "\
   php artisan view:cache && \
   php artisan storage:link && \
   echo '🚀 Menjalankan Laravel server...' && \
-  php artisan serve --host=0.0.0.0 --port=${PORT:-9000} \
+  php artisan serve --host=0.0.0.0 --port=8080 \
 "]
-
