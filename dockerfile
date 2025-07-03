@@ -40,7 +40,7 @@ CMD ["sh", "-c", "\
     echo '⏳ MySQL belum siap, menunggu...' && sleep 5; \
   done && \
   echo '✅ MySQL terkoneksi, lanjut migrasi...' && \
-  php artisan migrate --force || { echo '❌ Migrasi gagal!'; exit 1; } && \
+  php artisan migrate --force || { echo '❌ Migrasi gagal!'; php artisan migrate:status; exit 1; } \
   php artisan config:clear && \
   php artisan cache:clear && \
   php artisan config:cache && \
