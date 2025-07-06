@@ -9,6 +9,6 @@ class Suhu extends Model
 {
     use HasFactory;
 
-    protected $table = 'suhus'; // Pastikan ini sesuai dengan nama tabel di database
+    protected $table = 'suhu'; // Pastikan ini sesuai dengan nama tabel di database
     protected $fillable = ['nilai'];
 }
