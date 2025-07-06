@@ -12,12 +12,10 @@ class DashboardController extends Controller
     public function index()
     {
         $kelembapan_terbaru = KelembapanTanah::latest()->first();
-        $suhu_terbaru = Suhu::latest()->first();
         $komponen = Komponen::latest()->first();
 
         return view('dashboard', [
             'kelembapan' => $kelembapan_terbaru ? $kelembapan_terbaru->nilai : null,
-            'suhu' => $suhu_terbaru ? $suhu_terbaru->nilai : null,
 
             'statusLampu' => $komponen ? $komponen->lampu : 'Tidak Diketahui',
             'waktuLampu' => $komponen ? $komponen->updated_at->format('Y-m-d H:i:s') : '-',
