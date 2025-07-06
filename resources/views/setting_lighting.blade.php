@@ -18,7 +18,7 @@
     <div class="bg-white p-8 rounded-lg shadow-lg mb-8 text-center">
         <h3 class="text-2xl font-bold mb-4 text-green-600">Kontrol Manual</h3>
 
-        <form action="{{ route('pencahayaan.manual') }}" method="POST">
+        {{-- ini juga penting sebenarnya<form action="{{ route('pencahayaan.manual') }}" method="POST"> --}}
             @csrf
             <button type="submit" name="manual_control" value="on"
                 class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">On</button>
