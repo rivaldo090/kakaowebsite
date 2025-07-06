@@ -60,9 +60,6 @@ Route::get('/admin/devices', [AdminDashboardController::class, 'devices'])->name
 // Halaman monitoring sensor (Blade)
 Route::get('/sensor', [SensorViewController::class, 'index'])->name('sensor.index');
 
-// Data sensor terbaru (untuk fetch frontend)
-Route::get('/sensor/latest', [SensorViewController::class, 'latest'])->name('sensor.latest');
-
 // Endpoint simpan data sensor dari Raspberry Pi
 Route::post('/sensor-data', [SensorDataController::class, 'store'])->name('sensor.store');
 
