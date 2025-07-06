@@ -21,7 +21,7 @@
     <div class="bg-white p-8 rounded-lg shadow-lg text-center hover:scale-105 transition duration-300">
         <h3 class="text-2xl font-bold mb-4 text-green-600">Suhu</h3>
         <p class="text-3xl font-semibold text-gray-700">
-            {{ $suhu !== null ? $suhu . ' °C' : 'Belum ada data' }}
+            {{-- {{ $suhu !== null ? $suhu . ' °C' : 'Belum ada data' }}ini penting--}}
         </p>
     </div>
 
