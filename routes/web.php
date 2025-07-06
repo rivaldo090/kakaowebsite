@@ -16,15 +16,6 @@ use App\Models\SensorData;
 use App\Events\DataSensorUpdated;
 use Illuminate\Http\Request;
 
-//kebutuhan deploy
-Route::get('/cek-db', function () {
-    try {
-        DB::connection()->getPdo();
-        return "✅ Laravel bisa konek ke database.";
-    } catch (\Exception $e) {
-        return "❌ Gagal konek DB: " . $e->getMessage();
-    }
-});
 
 
 // ==================== AUTH ====================
