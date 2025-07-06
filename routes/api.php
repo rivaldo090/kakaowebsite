@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\SensorApiController;
 use App\Http\Controllers\Api\SensorDataController;
 use App\Http\Controllers\Api\AuthController;
+use App\Models\SensorData;
+
 
 // ========== AUTH ==========
 Route::post('/registerr', [AuthController::class, 'register']);
@@ -26,3 +28,17 @@ Route::middleware('auth:sanctum')->group(function () {
 // ========== SENSOR DATA ==========
 Route::post('/sensor', [SensorApiController::class, 'store']);
 
+Route::post('/sensor-data', function (Request $request) {
+    $validated = $request->validate([
+        'temperature' => 'required|numeric',
+        'humidity' => 'required|numeric',
+        'soil_moisture' => 'required|numeric',
+        'lamp_status' => 'required|string',
+        'water_pump' => 'required|string',
+        'fertilizer' => 'required|string',
+    ]);
+
+    SensorData::create($validated);
+
+    return response()->json(['message' => 'Data sensor berhasil diterima'], 201);
+});

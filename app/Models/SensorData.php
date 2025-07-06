@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class SensorData extends Model
 {
-    
-    protected $fillable = ['suhu', 'kelembapan_udara', 'kelembapan_tanah'];
-
+    protected $fillable = [
+        'temperature',
+        'humidity',
+        'soil_moisture',
+        'lamp_status',
+        'water_pump',
+        'fertilizer',
+    ];
 }
