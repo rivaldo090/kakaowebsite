@@ -19,6 +19,9 @@ use Illuminate\Http\Request;
 
 
 // ==================== AUTH ====================
+Route::get('/ping', function () {
+    return 'Laravel is OK';
+});
 
 // Halaman login awal
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
