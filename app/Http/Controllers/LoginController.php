@@ -37,7 +37,7 @@ if (Auth::attempt($credentials)) {
 
     // Cek berdasarkan user_id atau role
     if ($user->id == 2 || $user->role === 'admin') {
-        return redirect()->route('dashboard_admin'); // route ke dashboard admin
+        return redirect()->route('dashboard'); // route ke dashboard admin
     } else {
         return redirect()->route('dashboard'); // route ke dashboard user biasa
     }
