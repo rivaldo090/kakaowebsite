@@ -14,7 +14,7 @@
             <a href="/" class="text-lg font-bold">Media Perawatan Bibit Kakao</a>
             <div class="space-x-4">
                 <a href="{{ route('login') }}" class="hover:underline">Login</a>
-                <a href="{{ route('register') }}" class="hover:underline">Register</a>
+                <a href="{{ route('login_admin') }}" class="hover:underline">login admin</a>
             </div>
         </div>
     </nav>
@@ -23,6 +23,3 @@
     <main class="container mx-auto mt-10 px-4">
         @yield('content')
     </main>
-
-</body>
-</html>

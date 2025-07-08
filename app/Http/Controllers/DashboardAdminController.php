@@ -13,20 +13,15 @@ class AdminDashboardController extends Controller
         $total_user = User::count();
         $total_device = Device::count();
 
+        // Ambil data user dan device untuk ditampilkan
         $users = User::select('id', 'username')->get();
-        $devices = Device::select('device_id', 'device_name')->get(); // ✅ Ganti dari $produk ke $devices
+        $produk = Device::select('device_id', 'device_name')->get();
 
         return view('dashboard_admin', compact(
             'total_user',
             'total_device',
             'users',
-            'devices' // ✅ Kirim ke view
+            'produk'
         ));
-    }
-
-    public function users()
-    {
-        $users = User::all();
-        return view('admin.users.index', compact('users'));
     }
 }
