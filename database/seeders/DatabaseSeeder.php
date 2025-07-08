@@ -8,9 +8,6 @@ use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         // Buat akun user biasa
@@ -23,10 +20,10 @@ class DatabaseSeeder extends Seeder
 
         // Buat akun admin
         User::create([
-    'username' => 'admin',
-    'email' => 'admin@example.com',
-    'role' => 'admin',
-    'password' => Hash::make('admin123'), // HARUS bcrypt atau Hash::make
-]);
+            'username' => 'admin',
+            'email' => 'admin@example.com',
+            'role' => 'admin',
+            'password' => Hash::make('admin123'),
+        ]);
     }
 }
