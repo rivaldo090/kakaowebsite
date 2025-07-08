@@ -23,10 +23,10 @@ class DatabaseSeeder extends Seeder
 
         // Buat akun admin
         User::create([
-            'username' => 'admin',
-            'email' => 'admin@example.com',
-            'role' => 'admin',
-            'password' => Hash::make('admin123'),
-        ]);
+    'username' => 'admin',
+    'email' => 'admin@example.com',
+    'role' => 'admin',
+    'password' => Hash::make('admin123'), // HARUS bcrypt atau Hash::make
+]);
     }
 }
