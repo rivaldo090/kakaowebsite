@@ -12,7 +12,7 @@
     <!-- Kelembapan Tanah -->
     <div class="bg-white p-8 rounded-lg shadow-lg text-center hover:scale-105 transition duration-300">
         <h3 class="text-2xl font-bold mb-4 text-green-600">Kelembapan Tanah</h3>
-        <p class="text-3xl font-semibold text-gray-700">
+        <p id="kelembapan" class="text-3xl font-semibold text-gray-700">
             {{ $kelembapan ?? 'Belum ada data' }}
         </p>
     </div>
@@ -20,15 +20,15 @@
     <!-- Suhu -->
     <div class="bg-white p-8 rounded-lg shadow-lg text-center hover:scale-105 transition duration-300">
         <h3 class="text-2xl font-bold mb-4 text-green-600">Suhu</h3>
-        <p class="text-3xl font-semibold text-gray-700">
-            {{-- {{ $suhu !== null ? $suhu . ' °C' : 'Belum ada data' }}ini penting--}}
+        <p id="suhu" class="text-3xl font-semibold text-gray-700">
+            {{ $suhu !== null ? $suhu . ' °C' : 'Belum ada data' }}
         </p>
     </div>
 
     <!-- Status Cahaya -->
     <div class="bg-white p-8 rounded-lg shadow-lg text-center hover:scale-105 transition duration-300">
         <h3 class="text-2xl font-bold mb-4 text-green-600">Cahaya</h3>
-        <p class="text-3xl font-semibold text-gray-700">
+        <p id="statusLampu" class="text-3xl font-semibold text-gray-700">
             {{ $statusLampu ?? 'non-aktif' }}
         </p>
     </div>
@@ -49,27 +49,48 @@
         <tbody>
             <tr class="border-t border-gray-200">
                 <td class="py-3 px-6">Lampu (Cahaya)</td>
-                <td class="py-3 px-6 font-semibold {{ $statusLampu == 'Aktif' ? 'text-green-600' : 'text-red-600' }}">
+                <td id="statusLampu" class="py-3 px-6 font-semibold {{ $statusLampu == 'Aktif' ? 'text-green-600' : 'text-red-600' }}">
                     {{ $statusLampu ?? '-' }}
                 </td>
-                <td class="py-3 px-6">{{ $waktuLampu ?? '-' }}</td>
+                <td id="waktuLampu" class="py-3 px-6">{{ $waktuLampu ?? '-' }}</td>
             </tr>
             <tr class="border-t border-gray-200">
                 <td class="py-3 px-6">Pompa Pemupukan</td>
-                <td class="py-3 px-6 font-semibold {{ $statusPemupukan == 'Aktif' ? 'text-green-600' : 'text-red-600' }}">
+                <td id="statusPemupukan" class="py-3 px-6 font-semibold {{ $statusPemupukan == 'Aktif' ? 'text-green-600' : 'text-red-600' }}">
                     {{ $statusPemupukan ?? '-' }}
                 </td>
-                <td class="py-3 px-6">{{ $waktuPemupukan ?? '-' }}</td>
+                <td id="waktuPemupukan" class="py-3 px-6">{{ $waktuPemupukan ?? '-' }}</td>
             </tr>
             <tr class="border-t border-gray-200">
                 <td class="py-3 px-6">Pompa Penyiraman</td>
-                <td class="py-3 px-6 font-semibold {{ $statusPenyiraman == 'Aktif' ? 'text-green-600' : 'text-red-600' }}">
+                <td id="statusPenyiraman" class="py-3 px-6 font-semibold {{ $statusPenyiraman == 'Aktif' ? 'text-green-600' : 'text-red-600' }}">
                     {{ $statusPenyiraman ?? '-' }}
                 </td>
-                <td class="py-3 px-6">{{ $waktuPenyiraman ?? '-' }}</td>
+                <td id="waktuPenyiraman" class="py-3 px-6">{{ $waktuPenyiraman ?? '-' }}</td>
             </tr>
         </tbody>
     </table>
 </div>
+
+<script>
+    function updateSensorData() {
+        fetch('/dashboard/latest-sensor')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('kelembapan').innerText = data.kelembapan + ' %';
+                document.getElementById('suhu').innerText = data.suhu + ' °C';
+                document.getElementById('statusLampu').innerText = data.statusLampu;
+                document.getElementById('statusPemupukan').innerText = data.statusPemupukan;
+                document.getElementById('statusPenyiraman').innerText = data.statusPenyiraman;
+
+                document.getElementById('waktuLampu').innerText = data.updatedAt;
+                document.getElementById('waktuPemupukan').innerText = data.updatedAt;
+                document.getElementById('waktuPenyiraman').innerText = data.updatedAt;
+            });
+    }
+
+    setInterval(updateSensorData, 5000);
+    updateSensorData();
+</script>
 
 @endsection

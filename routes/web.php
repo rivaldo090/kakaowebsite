@@ -1,19 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\PemupukanController;
-use App\Http\Controllers\HistoryController;
-use App\Http\Controllers\WatteringController;
-use App\Http\Controllers\PencahayaanController;
-use App\Http\Controllers\SensorViewController;
-use App\Http\Controllers\SensorController;
+use App\Http\Controllers\{
+    LoginController,
+    RegisterController,
+    DashboardController,
+    AdminDashboardController,
+    PemupukanController,
+    HistoryController,
+    WatteringController,
+    PencahayaanController,
+    SensorViewController,
+    SensorController,
+    AdminAuthController,
+    DeviceController
+};
 use App\Http\Controllers\Api\SensorDataController;
-use App\Http\Controllers\AdminAuthController;
-use App\Http\Controllers\DeviceController;
 use App\Models\SensorData;
 use App\Events\DataSensorUpdated;
 
@@ -26,17 +28,18 @@ Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/register', [RegisterController::class, 'store'])->name('register.submit');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Admin Auth
+// ==================== ADMIN AUTH ====================
 Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('login_admin');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('login_admin.submit');
 Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
 // ==================== DASHBOARD ====================
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard/latest-sensor', [DashboardController::class, 'latestSensor']); // <--- Realtime AJAX route
 Route::get('/dashboard_admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 Route::get('/admin/users', [AdminDashboardController::class, 'users'])->name('admin.users');
 
-// ==================== DEVICE (Admin Protected) ====================
+// ==================== DEVICE (ADMIN PROTECTED) ====================
 Route::prefix('admin/devices')->name('admin.devices.')->middleware('auth:admin')->group(function () {
     Route::get('/', [DeviceController::class, 'index'])->name('index');
     Route::get('/create', [DeviceController::class, 'create'])->name('create');
@@ -80,4 +83,4 @@ Route::get('/test-broadcast', function () {
     return 'Tidak ada data sensor untuk broadcast.';
 });
 
-Route::get('/data-sensor', fn() => App\Models\Sensor::latest()->get());
+Route::get('/data-sensor', fn() => \App\Models\Sensor::latest()->get());
