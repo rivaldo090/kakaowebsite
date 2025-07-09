@@ -19,4 +19,16 @@ class SensorController extends Controller
 
         return response()->json(['message' => 'Data suhu berhasil disimpan']);
     }
+
+    // ✅ Tambahan method umum untuk menerima semua data sensor
+    public function store(Request $request)
+    {
+        $data = $request->all();
+
+        // Logika penyimpanan bisa ditambah di sini jika dibutuhkan
+        return response()->json([
+            'message' => 'Data diterima',
+            'data' => $data
+        ]);
+    }
 }

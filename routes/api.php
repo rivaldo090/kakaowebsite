@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\SensorApiController;
 use App\Http\Controllers\Api\SensorDataController;
 use App\Http\Controllers\Api\AuthController;
 use App\Models\SensorData;
-
+use App\Http\Controllers\SensorController;
 
 // ========== AUTH ==========
 Route::post('/registerr', [AuthController::class, 'register']);
@@ -24,3 +24,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
+
+Route::post('/sensor-data', [SensorController::class, 'store']);
