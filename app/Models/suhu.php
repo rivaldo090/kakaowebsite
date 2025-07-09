@@ -8,4 +8,6 @@ class Suhu extends Model
     protected $table = 'suhu';
 
     protected $fillable = ['nilai'];
+
+    
 }
