@@ -24,21 +24,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
-
-// ========== SENSOR DATA ==========
-Route::post('/sensor', [SensorApiController::class, 'store']);
-
-Route::post('/sensor-data', function (Request $request) {
-    $validated = $request->validate([
-        'temperature' => 'required|numeric',
-        'humidity' => 'required|numeric',
-        'soil_moisture' => 'required|numeric',
-        'lamp_status' => 'required|string',
-        'water_pump' => 'required|string',
-        'fertilizer' => 'required|string',
-    ]);
-
-    SensorData::create($validated);
-
-    return response()->json(['message' => 'Data sensor berhasil diterima'], 201);
-});
