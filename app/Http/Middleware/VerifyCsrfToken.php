@@ -12,6 +12,10 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        '/sensor-data',
-    ];
+    '/sensor-data',
+    'sensor-data',
+    'https://kakaowebsite-production.up.railway.app/sensor-data',
+    '*sensor-data',
+];
+
 }
