@@ -51,7 +51,7 @@ Route::prefix('admin/devices')->name('admin.devices.')->middleware('auth:admin')
 
 // ==================== MONITORING & SENSOR ====================
 Route::get('/sensor', [SensorViewController::class, 'index'])->name('sensor.index');
-// Route::post('/sensor-data', [SensorDataController::class, 'store'])->name('sensor.store');
+Route::post('/sensor-data', [SensorDataController::class, 'store'])->name('sensor.store');
 Route::post('/terima-suhu', [SensorController::class, 'terimaSuhu']);
 Route::get('/sensor-latest', [SensorViewController::class, 'latest'])->name('sensor.latest');
 
