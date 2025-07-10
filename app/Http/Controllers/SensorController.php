@@ -5,30 +5,49 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\SensorData;
 
-class SensorController extends Controller
+class SensorDataController extends Controller
 {
     /**
-     * Menerima dan menyimpan data sensor dari Raspberry Pi atau perangkat lain.
+     * Menyimpan data sensor dari Raspberry Pi.
      */
     public function store(Request $request)
     {
-        // Validasi input dari request
         $validated = $request->validate([
-            'temperature'    => 'required|numeric',
-            'humidity'       => 'required|numeric',
-            'soil_moisture'  => 'required|numeric',
-            'lamp_status'    => 'required|boolean',
-            'water_pump'     => 'required|boolean',
-            'fertilizer'     => 'required|boolean',
+            'suhu' => 'required|numeric',
+            'kelembaban_udara' => 'required|numeric',
+            'kelembaban_tanah' => 'required|numeric',
+            'status_lampu' => 'nullable|string',
+            'status_pemupukan' => 'nullable|string',
+            'status_penyiraman' => 'nullable|string',
         ]);
 
-        // Simpan data ke database
-        $sensorData = SensorData::create($validated);
+        $data = SensorData::create($validated);
 
-        // Respon JSON berhasil
         return response()->json([
             'message' => 'Data sensor berhasil disimpan',
-            'data' => $sensorData
+            'data' => $data,
         ], 201);
+    }
+
+    /**
+     * Menampilkan data sensor terbaru.
+     */
+    public function latest()
+    {
+        $latest = SensorData::latest()->first();
+
+        return response()->json([
+            'data' => $latest,
+        ]);
+    }
+
+    /**
+     * Menampilkan semua data sensor (opsional).
+     */
+    public function index()
+    {
+        return response()->json([
+            'data' => SensorData::orderBy('created_at', 'desc')->get(),
+        ]);
     }
 }

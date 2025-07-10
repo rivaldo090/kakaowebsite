@@ -20,7 +20,7 @@ class DashboardController extends Controller
             'suhu' => $suhu_terbaru ? $suhu_terbaru->nilai : null,
 
             'statusLampu' => $komponen ? $komponen->lampu : 'Tidak Diketahui',
-            'waktuLampu' => $komponen ? $komponen->updated_at->format('Y-m-d H:i:s') : '-',
+            'waktuLampu' => optional($komponen->updated_at)->format('Y-m-d H:i:s') ?? '-',
 
             'statusPemupukan' => $komponen ? $komponen->pemupukan : 'Tidak Diketahui',
             'waktuPemupukan' => $komponen ? $komponen->updated_at->format('Y-m-d H:i:s') : '-',
