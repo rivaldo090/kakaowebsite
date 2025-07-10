@@ -3,32 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Suhu;
+use App\Models\SensorData;
 
 class SensorController extends Controller
 {
-    public function terimaSuhu(Request $request)
-    {
-        $request->validate([
-            'suhu' => 'required|numeric',
-        ]);
-
-        Suhu::create([
-            'nilai' => $request->input('suhu')
-        ]);
-
-        return response()->json(['message' => 'Data suhu berhasil disimpan']);
-    }
-
-    // ✅ Tambahan method umum untuk menerima semua data sensor
+    /**
+     * Menerima dan menyimpan data sensor dari Raspberry Pi atau perangkat lain.
+     */
     public function store(Request $request)
     {
-        $data = $request->all();
-
-        // Logika penyimpanan bisa ditambah di sini jika dibutuhkan
-        return response()->json([
-            'message' => 'Data diterima',
-            'data' => $data
+        // Validasi input dari request
+        $validated = $request->validate([
+            'temperature'    => 'required|numeric',
+            'humidity'       => 'required|numeric',
+            'soil_moisture'  => 'required|numeric',
+            'lamp_status'    => 'required|boolean',
+            'water_pump'     => 'required|boolean',
+            'fertilizer'     => 'required|boolean',
         ]);
+
+        // Simpan data ke database
+        $sensorData = SensorData::create($validated);
+
+        // Respon JSON berhasil
+        return response()->json([
+            'message' => 'Data sensor berhasil disimpan',
+            'data' => $sensorData
+        ], 201);
     }
 }
