@@ -1,26 +1,39 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\SensorDataController;
-use App\Http\Controllers\SensorController; // <- Ini tetap jika SensorController kamu bukan di folder Api
+use App\Http\Controllers\Api\SensorController;
+use App\Http\Controllers\SensorViewController;
+use App\Http\Controllers\API\AuthController;
 
-// ========== TES API ==========
-Route::get('/test', fn() => ['message' => 'API aktif']);
+// ------------------------
+// ✅ Endpoint Sensor
+// ------------------------
+Route::apiResource('sensor', SensorController::class)->only(['index', 'store']);
 
-// ========== AUTH ==========
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+// Data sensor terbaru (untuk dashboard)
+Route::get('/sensor-latest', [SensorViewController::class, 'latest'])->name('sensor.latest');
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/me', [AuthController::class, 'me']);
-    Route::get('/user', [AuthController::class, 'user']);
-    Route::post('/logout', [AuthController::class, 'logout']);
+// ------------------------
+// ✅ Tes API
+// ------------------------
+Route::get('/hello', function () {
+    return response()->json(['message' => 'Hello World']);
 });
 
-// ========== USER ==========
-Route::get('/users', [UserController::class, 'index']);
+// ------------------------
+// ✅ Authentication
+// ------------------------
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login',    [AuthController::class, 'login']);
 
-// ========== SENSOR ==========
-Route::post('/sensor-data', [SensorController::class, 'store']); // ✅ endpoint untuk menerima data dari Raspberry Pi
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/me',     [AuthController::class, 'me']);
+    Route::post('/logout',[AuthController::class, 'logout']);
+});
+
+
+// routes/api.php
+Route::middleware('auth:sanctum')->get('/sensor/latest', function () {
+    return \App\Models\SensorData::latest()->first();
+});

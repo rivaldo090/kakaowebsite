@@ -3,42 +3,45 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\KelembapanTanah;
-use App\Models\Suhu;
+use App\Models\SensorData;
 use App\Models\Komponen;
 
 class DashboardController extends Controller
 {
+    /**
+     * Menampilkan data sensor dan status komponen ke dashboard Blade.
+     */
     public function index()
     {
-        $kelembapan_terbaru = KelembapanTanah::latest()->first();
-        $suhu_terbaru = Suhu::latest()->first();
+        $sensor = SensorData::latest()->first();
         $komponen = Komponen::latest()->first();
 
         return view('dashboard', [
-            'kelembapan' => $kelembapan_terbaru ? $kelembapan_terbaru->nilai : null,
-            'suhu' => $suhu_terbaru ? $suhu_terbaru->nilai : null,
+            'kelembapan' => $sensor?->soil ?? 'Belum ada data',
+            'suhu' => $sensor?->temperature ?? 'Belum ada data',
 
-            'statusLampu' => $komponen ? $komponen->lampu : 'Tidak Diketahui',
-            'waktuLampu' => $komponen ? $komponen->updated_at->format('Y-m-d H:i:s') : '-',
+            'statusLampu' => $komponen?->lampu ?? 'Tidak Diketahui',
+            'waktuLampu' => $komponen?->updated_at?->format('Y-m-d H:i:s') ?? '-',
 
-            'statusPemupukan' => $komponen ? $komponen->pemupukan : 'Tidak Diketahui',
-            'waktuPemupukan' => $komponen ? $komponen->updated_at->format('Y-m-d H:i:s') : '-',
+            'statusPemupukan' => $komponen?->pemupukan ?? 'Tidak Diketahui',
+            'waktuPemupukan' => $komponen?->updated_at?->format('Y-m-d H:i:s') ?? '-',
 
-            'statusPenyiraman' => $komponen ? $komponen->penyiraman : 'Tidak Diketahui',
-            'waktuPenyiraman' => $komponen ? $komponen->updated_at->format('Y-m-d H:i:s') : '-',
+            'statusPenyiraman' => $komponen?->penyiraman ?? 'Tidak Diketahui',
+            'waktuPenyiraman' => $komponen?->updated_at?->format('Y-m-d H:i:s') ?? '-',
         ]);
     }
 
+    /**
+     * Mengirim data sensor & status komponen sebagai response JSON (dipakai JS).
+     */
     public function latestSensor()
     {
-        $kelembapan_terbaru = KelembapanTanah::latest()->first();
-        $suhu_terbaru = Suhu::latest()->first();
+        $sensor = SensorData::latest()->first();
         $komponen = Komponen::latest()->first();
 
         return response()->json([
-            'kelembapan' => $kelembapan_terbaru?->nilai,
-            'suhu' => $suhu_terbaru?->nilai,
+            'kelembapan' => $sensor?->soil,
+            'suhu' => $sensor?->temperature,
             'statusLampu' => $komponen?->lampu,
             'statusPemupukan' => $komponen?->pemupukan,
             'statusPenyiraman' => $komponen?->penyiraman,

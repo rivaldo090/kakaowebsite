@@ -50,9 +50,6 @@ Route::prefix('admin/devices')->name('admin.devices.')->middleware('auth:admin')
 });
 
 // ==================== MONITORING & SENSOR ====================
-Route::get('/sensor', [SensorViewController::class, 'index'])->name('sensor.index');
-Route::post('/terima-suhu', [SensorController::class, 'terimaSuhu']);
-Route::get('/sensor-latest', [SensorViewController::class, 'latest'])->name('sensor.latest');
 
 // ==================== PENGATURAN ====================
 Route::view('/settings/watering', 'setting_wattering')->name('setting_wattering');
