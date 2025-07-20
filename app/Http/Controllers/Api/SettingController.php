@@ -32,8 +32,8 @@ class SettingController extends Controller
             ],
             'pemupukan' => [
                 'date' => $pemupukan?->tanggal ?? date('Y-m-d'),
-                'start' => $pemupukan?->jam_mulai ?? '21.55',
-                'end' => $pemupukan?->jam_selesai ?? '21.57',
+                'start' => $pemupukan?->jam_mulai ?? '19.30',
+                'end' => $pemupukan?->jam_selesai ?? '19.31',
                 'jenis' => $pemupukan?->jenis_pupuk ?? '-',
                 'jumlah' => $pemupukan?->jumlah ?? '-',
             ]

@@ -8,7 +8,7 @@ class CreatePupuksTable extends Migration
 {
     public function up()
     {
-        Schema::create('pemupukans', function (Blueprint $table) {
+        Schema::create('pupuk', function (Blueprint $table) {
     $table->id();
     $table->string('jenis_pupuk');
     $table->integer('jumlah');
