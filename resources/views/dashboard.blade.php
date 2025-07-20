@@ -12,7 +12,7 @@
     <!-- Kelembapan Tanah -->
     <div class="bg-white p-8 rounded-lg shadow-lg text-center hover:scale-105 transition duration-300">
         <h3 class="text-2xl font-bold mb-4 text-green-600">Kelembapan Tanah</h3>
-        <p id="kelembapan" class="text-3xl font-semibold text-gray-700">
+        <p id="kelembapanText" class="text-3xl font-semibold text-gray-700">
             {{ $kelembapan ?? 'Belum ada data' }}
         </p>
     </div>
@@ -20,7 +20,7 @@
     <!-- Suhu -->
     <div class="bg-white p-8 rounded-lg shadow-lg text-center hover:scale-105 transition duration-300">
         <h3 class="text-2xl font-bold mb-4 text-green-600">Suhu</h3>
-        <p id="suhu" class="text-3xl font-semibold text-gray-700">
+        <p id="suhuText" class="text-3xl font-semibold text-gray-700">
             {{ $suhu !== null ? $suhu . ' °C' : 'Belum ada data' }}
         </p>
     </div>
@@ -28,7 +28,7 @@
     <!-- Status Cahaya -->
     <div class="bg-white p-8 rounded-lg shadow-lg text-center hover:scale-105 transition duration-300">
         <h3 class="text-2xl font-bold mb-4 text-green-600">Cahaya</h3>
-        <p id="statusLampu" class="text-3xl font-semibold text-gray-700">
+        <p id="statusLampuText" class="text-3xl font-semibold text-gray-700">
             {{ $statusLampu ?? 'non-aktif' }}
         </p>
     </div>
@@ -49,7 +49,7 @@
         <tbody>
             <tr class="border-t border-gray-200">
                 <td class="py-3 px-6">Lampu (Cahaya)</td>
-                <td id="statusLampu" class="py-3 px-6 font-semibold {{ $statusLampu == 'Aktif' ? 'text-green-600' : 'text-red-600' }}">
+                <td id="statusLampuTable" class="py-3 px-6 font-semibold {{ $statusLampu == 'Aktif' ? 'text-green-600' : 'text-red-600' }}">
                     {{ $statusLampu ?? '-' }}
                 </td>
                 <td id="waktuLampu" class="py-3 px-6">{{ $waktuLampu ?? '-' }}</td>
@@ -77,9 +77,13 @@
         fetch('/dashboard/latest-sensor')
             .then(res => res.json())
             .then(data => {
-                document.getElementById('kelembapan').innerText = data.kelembapan + ' %';
-                document.getElementById('suhu').innerText = data.suhu + ' °C';
-                document.getElementById('statusLampu').innerText = data.statusLampu;
+                // Kartu atas
+                document.getElementById('kelembapanText').innerText = data.kelembapan + ' %';
+                document.getElementById('suhuText').innerText = data.suhu + ' °C';
+                document.getElementById('statusLampuText').innerText = data.statusLampu;
+
+                // Tabel komponen
+                document.getElementById('statusLampuTable').innerText = data.statusLampu;
                 document.getElementById('statusPemupukan').innerText = data.statusPemupukan;
                 document.getElementById('statusPenyiraman').innerText = data.statusPenyiraman;
 

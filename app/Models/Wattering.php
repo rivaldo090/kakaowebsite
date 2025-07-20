@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Wattering extends Model
 {
+    protected $table = 'watterings';
+
     protected $fillable = [
         'min_humidity',
         'max_humidity',

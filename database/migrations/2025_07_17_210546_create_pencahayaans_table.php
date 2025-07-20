@@ -10,10 +10,10 @@ return new class extends Migration
     {
         Schema::create('pencahayaans', function (Blueprint $table) {
             $table->id();
-            $table->integer('intensitas'); // persentase intensitas pencahayaan
-            $table->time('jam_mulai');
-            $table->time('jam_selesai');
-            $table->timestamps();
+            $table->integer('intensitas');         // persentase intensitas pencahayaan (0-100)
+            $table->time('jam_mulai');             // waktu mulai pencahayaan
+            $table->time('jam_selesai');           // waktu selesai pencahayaan
+            $table->timestamps();                  // created_at dan updated_at
         });
     }
 

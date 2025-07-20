@@ -3,39 +3,34 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pupuk;
-use App\Models\History;
+use App\Models\Pemupukan;
+use App\Models\History; // Tambahkan ini
 
 class PemupukanController extends Controller
 {
-    public function index()
-    {
-        return view('pemupukans');
-    }
-
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'jenis_pupuk' => 'required|string',
-            'jumlah' => 'required|numeric',
-            'fertilization_dates' => 'required|array',
+        $request->validate([
+            'jenis_pupuk' => 'required|string|max:255',
+            'jumlah' => 'required|numeric|min:1',
+            'fertilization_dates' => 'required|array|min:1',
             'fertilization_dates.*' => 'date',
         ]);
 
-        foreach ($validated['fertilization_dates'] as $date) {
-            // Simpan ke tabel pupuks
-            Pupuk::create([
-                'jenis_pupuk' => $validated['jenis_pupuk'],
-                'jumlah' => $validated['jumlah'],
-                'tanggal' => $date,
+        foreach ($request->fertilization_dates as $tanggal) {
+            // Simpan ke tabel pemupukan
+            Pemupukan::create([
+                'jenis_pupuk' => $request->jenis_pupuk,
+                'jumlah' => $request->jumlah,
+                'tanggal_pemupukan' => $tanggal,
             ]);
 
-            // Simpan ke tabel histories
+            // Simpan juga ke tabel history
             History::create([
-                'tanggal' => $date,
                 'jenis' => 'pemupukan',
+                'tanggal' => $tanggal,
                 'jam_mulai' => now()->format('H:i'),
-                'jam_selesai' => now()->addMinutes(10)->format('H:i'), // contoh: 10 menit
+                'jam_selesai' => now()->addMinutes(5)->format('H:i'),
             ]);
         }
 

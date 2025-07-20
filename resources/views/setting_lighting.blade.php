@@ -7,52 +7,42 @@
 <div class="container mx-auto py-12 px-4">
     <h2 class="text-4xl font-bold text-center text-gray-800 mb-8">Pengaturan Pencahayaan</h2>
 
-    <!-- Status dari Session -->
     @if (session('success'))
         <div class="bg-green-100 text-green-800 p-4 rounded mb-6 text-center font-semibold">
             {{ session('success') }}
         </div>
     @endif
 
-    <!-- Kontrol Manual -->
-    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 text-center">
-        <h3 class="text-2xl font-bold mb-4 text-green-600">Kontrol Manual</h3>
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-xl mx-auto">
+        <h3 class="text-2xl font-bold mb-6 text-green-600 text-center">Kontrol Manual Pencahayaan</h3>
 
-        {{-- ini juga penting sebenarnya<form action="{{ route('pencahayaan.manual') }}" method="POST"> --}}
-            @csrf
-            <button type="submit" name="manual_control" value="on"
-                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">On</button>
-            <button type="submit" name="manual_control" value="off"
-                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Off</button>
-        </form>
-    </div>
-
-    <!-- Pengaturan Jadwal Otomatis -->
-    <div class="bg-white p-8 rounded-lg shadow-lg text-center">
-        <h3 class="text-2xl font-bold mb-4 text-green-600">Pengaturan Jadwal</h3>
-        <p class="text-gray-600 mb-4">Atur waktu mulai dan selesai untuk pencahayaan otomatis.</p>
-
-        <form method="POST" action="{{ route('setting_lighting.store') }}">
+        <form action="{{ route('pencahayaan.manual') }}" method="POST">
             @csrf
 
-            <div class="mb-4">
-                <label for="intensitas" class="block mb-2 font-semibold">Intensitas Cahaya (%)</label>
-                <input type="number" name="intensitas" id="intensitas" required class="w-full p-2 border rounded" placeholder="Contoh: 80">
+            <!-- Intensitas -->
+            <div class="mb-6">
+                <label for="intensitas" class="block text-gray-700 font-semibold mb-2">Intensitas Cahaya: <span id="nilai-intensitas">100</span>%</label>
+                <input type="range" name="intensitas" id="intensitas" min="0" max="100" value="100" class="w-full">
             </div>
 
-            <div class="mb-4">
-                <label for="jam_mulai" class="block mb-2 font-semibold">Waktu Mulai</label>
-                <input type="time" name="jam_mulai" id="jam_mulai" required class="w-full p-2 border rounded">
+            <!-- Tombol kontrol -->
+            <div class="flex justify-center gap-4">
+                <button type="submit" name="status" value="on"
+                    class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600">Nyalakan</button>
+                <button type="submit" name="status" value="off"
+                    class="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600">Matikan</button>
             </div>
-
-            <div class="mb-4">
-                <label for="jam_selesai" class="block mb-2 font-semibold">Waktu Selesai</label>
-                <input type="time" name="jam_selesai" id="jam_selesai" required class="w-full p-2 border rounded">
-            </div>
-
-            <button type="submit" class="bg-green-600 text-white py-2 px-6 rounded-full hover:bg-green-700">Simpan</button>
         </form>
     </div>
 </div>
+
+<!-- Script untuk memperbarui label intensitas -->
+<script>
+    const slider = document.getElementById('intensitas');
+    const label = document.getElementById('nilai-intensitas');
+    slider.addEventListener('input', function () {
+        label.textContent = slider.value;
+    });
+</script>
 
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\SensorData;
 use App\Models\Komponen;
+use App\Models\History;
 
 class DashboardController extends Controller
 {
@@ -16,18 +17,23 @@ class DashboardController extends Controller
         $sensor = SensorData::latest()->first();
         $komponen = Komponen::latest()->first();
 
+        // Ambil status pencahayaan dari history
+        $latestLampuLog = History::where('jenis', 'pencahayaan')->latest()->first();
+        $statusLampu = ($latestLampuLog && $latestLampuLog->jam_selesai === null) ? 'Aktif' : 'Non-Aktif';
+        $waktuLampu = $latestLampuLog ? $latestLampuLog->updated_at->format('Y-m-d H:i:s') : '-';
+
         return view('dashboard', [
-            'kelembapan' => $sensor?->soil ?? 'Belum ada data',
-            'suhu' => $sensor?->temperature ?? 'Belum ada data',
+            'kelembapan'         => $sensor?->soil ?? 'Belum ada data',
+            'suhu'               => $sensor?->temperature ?? 'Belum ada data',
 
-            'statusLampu' => $komponen?->lampu ?? 'Tidak Diketahui',
-            'waktuLampu' => $komponen?->updated_at?->format('Y-m-d H:i:s') ?? '-',
+            'statusLampu'        => $statusLampu,
+            'waktuLampu'         => $waktuLampu,
 
-            'statusPemupukan' => $komponen?->pemupukan ?? 'Tidak Diketahui',
-            'waktuPemupukan' => $komponen?->updated_at?->format('Y-m-d H:i:s') ?? '-',
+            'statusPemupukan'    => $komponen ? ($komponen->pemupukan ? 'Aktif' : 'Non-Aktif') : 'Tidak Diketahui',
+            'waktuPemupukan'     => $komponen?->updated_at?->format('Y-m-d H:i:s') ?? '-',
 
-            'statusPenyiraman' => $komponen?->penyiraman ?? 'Tidak Diketahui',
-            'waktuPenyiraman' => $komponen?->updated_at?->format('Y-m-d H:i:s') ?? '-',
+            'statusPenyiraman'   => $komponen ? ($komponen->penyiraman ? 'Aktif' : 'Non-Aktif') : 'Tidak Diketahui',
+            'waktuPenyiraman'    => $komponen?->updated_at?->format('Y-m-d H:i:s') ?? '-',
         ]);
     }
 
@@ -39,13 +45,18 @@ class DashboardController extends Controller
         $sensor = SensorData::latest()->first();
         $komponen = Komponen::latest()->first();
 
+        // Ambil status pencahayaan dari history
+        $latestLampuLog = History::where('jenis', 'pencahayaan')->latest()->first();
+        $statusLampu = ($latestLampuLog && $latestLampuLog->jam_selesai === null) ? 'Aktif' : 'Non-Aktif';
+        $updatedAt = $latestLampuLog ? $latestLampuLog->updated_at->format('Y-m-d H:i:s') : '-';
+
         return response()->json([
-            'kelembapan' => $sensor?->soil,
-            'suhu' => $sensor?->temperature,
-            'statusLampu' => $komponen?->lampu,
-            'statusPemupukan' => $komponen?->pemupukan,
-            'statusPenyiraman' => $komponen?->penyiraman,
-            'updatedAt' => $komponen?->updated_at?->format('Y-m-d H:i:s'),
+            'kelembapan'         => $sensor?->soil ?? 0,
+            'suhu'               => $sensor?->temperature ?? 0,
+            'statusLampu'        => $statusLampu,
+            'statusPemupukan'    => $komponen ? ($komponen->pemupukan ? 'Aktif' : 'Non-Aktif') : 'Tidak Diketahui',
+            'statusPenyiraman'   => $komponen ? ($komponen->penyiraman ? 'Aktif' : 'Non-Aktif') : 'Tidak Diketahui',
+            'updatedAt'          => $updatedAt,
         ]);
     }
 }

@@ -15,9 +15,6 @@ use App\Http\Controllers\{
     AdminAuthController,
     DeviceController
 };
-use App\Http\Controllers\Api\SensorDataController;
-use App\Models\SensorData;
-use App\Events\DataSensorUpdated;
 
 // ==================== AUTH ====================
 Route::get('/ping', fn() => 'Laravel is OK');
@@ -35,11 +32,11 @@ Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admi
 
 // ==================== DASHBOARD ====================
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/dashboard/latest-sensor', [DashboardController::class, 'latestSensor']); // <--- Realtime AJAX route
+Route::get('/dashboard/latest-sensor', [DashboardController::class, 'latestSensor']);
 Route::get('/dashboard_admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 Route::get('/admin/users', [AdminDashboardController::class, 'users'])->name('admin.users');
 
-// ==================== DEVICE (ADMIN PROTECTED) ====================
+// ==================== DEVICE (ADMIN) ====================
 Route::prefix('admin/devices')->name('admin.devices.')->middleware('auth:admin')->group(function () {
     Route::get('/', [DeviceController::class, 'index'])->name('index');
     Route::get('/create', [DeviceController::class, 'create'])->name('create');
@@ -49,15 +46,12 @@ Route::prefix('admin/devices')->name('admin.devices.')->middleware('auth:admin')
     Route::delete('/{device}', [DeviceController::class, 'destroy'])->name('destroy');
 });
 
-// ==================== MONITORING & SENSOR ====================
-
 // ==================== PENGATURAN ====================
 Route::view('/settings/watering', 'setting_wattering')->name('setting_wattering');
 Route::post('/penyiraman/store', [WatteringController::class, 'store'])->name('penyiraman.store');
 
 Route::view('/settings/lighting', 'setting_lighting')->name('setting_lighting');
-Route::post('/setting_lighting/store', [PencahayaanController::class, 'store'])->name('setting_lighting.store');
-Route::post('/pencahayaan/manual', [PencahayaanController::class, 'kontrolManual']);
+Route::post('/pencahayaan/manual', [PencahayaanController::class, 'manual'])->name('pencahayaan.manual');
 
 Route::view('/settings/fertilization', 'pemupukan')->name('pemupukan');
 Route::post('/pemupukan/store', [PemupukanController::class, 'store'])->name('pemupukan.store');
@@ -70,6 +64,9 @@ Route::view('/profile', 'profile')->name('profile');
 Route::view('/profile/edit', 'profile_edit')->name('profile.edit');
 
 // ==================== BROADCAST TEST ====================
+use App\Models\SensorData;
+use App\Events\DataSensorUpdated;
+
 Route::get('/test-broadcast', function () {
     $dummy = SensorData::latest()->first();
     if ($dummy) {
@@ -79,4 +76,5 @@ Route::get('/test-broadcast', function () {
     return 'Tidak ada data sensor untuk broadcast.';
 });
 
+// ==================== SENSOR DEBUG ====================
 Route::get('/data-sensor', fn() => \App\Models\Sensor::latest()->get());
